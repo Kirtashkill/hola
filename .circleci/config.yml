@@ -32,9 +32,9 @@ jobs:
       - checkout
       - run:
           name: "Deploy in k8s"
-          command: "kubectl --kubeconfig ./kubeconfig apply deployment.yaml && \
-                    kubectl --kubeconfig ./kubeconfig apply svc.yaml && \
-                    kubectl --kubeconfig ./kubeconfig apply ingress.yaml"
+          command: "kubectl --kubeconfig ./kubeconfig apply -f deployment.yaml && \
+                    kubectl --kubeconfig ./kubeconfig apply -f svc.yaml && \
+                    kubectl --kubeconfig ./kubeconfig apply -f ingress.yaml"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
