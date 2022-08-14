@@ -7,7 +7,7 @@ spec:
   #tls:
   #  - secretName: test-cert
   rules:
-  - host: *
+  - host: /test
     http:
       paths:
       - backend:
