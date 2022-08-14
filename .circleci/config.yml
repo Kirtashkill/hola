@@ -24,6 +24,15 @@ jobs:
                     sudo apt update && \
                     sudo apt install -y kubectl && \
                     kubectl version --client"
+  deploy:
+    resource_class: kirtashkill/test
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: "Deploy in k8s"
+          command: "kubectl --kubeconfig ./kubeconfig get pods -A"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -31,3 +40,4 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
+      - deploy
