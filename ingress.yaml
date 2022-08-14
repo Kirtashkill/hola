@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-test
+  namespace: default
+spec:
+  #tls:
+  #  - secretName: test-cert
+  rules:
+  - host: *
+    http:
+      paths:
+      - backend:
+          serviceName: test
+          servicePort: 80
