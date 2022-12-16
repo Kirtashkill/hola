@@ -4,7 +4,6 @@ version: 2.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
-vote-app-workflow:
 jobs:
   install-kubectl:
     resource_class: kirtashkill/test
@@ -24,8 +23,6 @@ jobs:
                     sudo chmod +x kubectl && sudo mkdir -p ~/.local/bin && sudo mv ./kubectl ~/.local/bin/kubectl && \
                     kubectl version --client"
   deploy:
-    requires:
-      - install-kubectl
     resource_class: kirtashkill/test
     docker:
       - image: cimg/edge:stable
