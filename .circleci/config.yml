@@ -41,5 +41,5 @@ workflows:
     jobs:
       - install-kubectl
       - deploy:
-        requires:
-          - install-kubectl
+          requires:
+            - install-kubectl
