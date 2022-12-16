@@ -23,6 +23,8 @@ jobs:
                     sudo chmod +x kubectl && sudo mkdir -p ~/.local/bin && sudo mv ./kubectl ~/.local/bin/kubectl && \
                     kubectl version --client"
   deploy:
+    requires:
+      - install-kubectl
     resource_class: kirtashkill/test
     docker:
       - image: cimg/edge:stable
