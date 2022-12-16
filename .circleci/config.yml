@@ -10,26 +10,22 @@ jobs:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      - image: cimg/base:stable
+      - image: cimg/edge:stable
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
       - run:
           name: "Install kubectl"
-          command: "sudo apt update && \
-                    echo \"finish\""
-          #command: "sudo apt update && \
-          #          sudo apt install -y ca-certificates curl apt-transport-https && \
-          #          sudo curl -LO \"https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl\" && \
-          #          sudo curl -LO \"https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256\" && \
-          #          echo \"$(cat kubectl.sha256)  kubectl\" | sha256sum --check && \
-          #          chmod +x kubectl && mkdir -p ~/.local/bin && mv ./kubectl ~/.local/bin/kubectl && \
-          #          kubectl version --client"
+          command: "sudo curl -LO \"https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl\" && \
+                    sudo curl -LO \"https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256\" && \
+                    echo \"$(cat kubectl.sha256)  kubectl\" | sha256sum --check && \
+                    chmod +x kubectl && mkdir -p ~/.local/bin && mv ./kubectl ~/.local/bin/kubectl && \
+                    kubectl version --client"
   deploy:
     resource_class: kirtashkill/test
     docker:
-      - image: cimg/base:stable
+      - image: cimg/edge:stable
     steps:
       - checkout
       - run:
