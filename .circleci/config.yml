@@ -5,38 +5,44 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 vote-app-workflow:
-  jobs:
-  - install-kubectl:
-      resource_class: kirtashkill/test
-      # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-      # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-      docker:
-        - image: cimg/edge:stable
-      # Add steps to the job
-      # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-      steps:
-        - checkout
-        - run:
-            name: "Install kubectl"
-            command: "sudo curl -LO \"https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl\" && \
-                      sudo curl -LO \"https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256\" && \
-                      echo \"$(cat kubectl.sha256)  kubectl\" | sha256sum --check && \
-                      sudo chmod +x kubectl && sudo mkdir -p ~/.local/bin && sudo mv ./kubectl ~/.local/bin/kubectl && \
-                      kubectl version --client"
-  - deploy:
-      requires:
-        - install-kubectl
-      resource_class: kirtashkill/test
-      docker:
-        - image: cimg/edge:stable
-      steps:
-        - checkout
-        - run:
-            name: "Deploy in k8s"
-            command: "kubectl --kubeconfig ./kubeconfig apply -f deployment.yaml && \
-                      kubectl --kubeconfig ./kubeconfig apply -f svc.yaml && \
-                      kubectl --kubeconfig ./kubeconfig apply -f ingress.yaml"
+jobs:
+  install-kubectl:
+    resource_class: kirtashkill/test
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: cimg/edge:stable
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - run:
+          name: "Install kubectl"
+          command: "sudo curl -LO \"https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl\" && \
+                    sudo curl -LO \"https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256\" && \
+                    echo \"$(cat kubectl.sha256)  kubectl\" | sha256sum --check && \
+                    sudo chmod +x kubectl && sudo mkdir -p ~/.local/bin && sudo mv ./kubectl ~/.local/bin/kubectl && \
+                    kubectl version --client"
+  deploy:
+    requires:
+      - install-kubectl
+    resource_class: kirtashkill/test
+    docker:
+      - image: cimg/edge:stable
+    steps:
+      - checkout
+      - run:
+          name: "Deploy in k8s"
+          command: "kubectl --kubeconfig ./kubeconfig apply -f deployment.yaml && \
+                    kubectl --kubeconfig ./kubeconfig apply -f svc.yaml && \
+                    kubectl --kubeconfig ./kubeconfig apply -f ingress.yaml"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
-workflows: null
+workflows:
+  say-hello-workflow:
+    jobs:
+      - install-kubectl
+      - deploy:
+        requires:
+          - install-kubectl
